@@ -1,4 +1,4 @@
-package com.example.learningdart
+package com.example.empathy
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.empathy" // твой пакет, нужен Flutter 3.10+ для Android Gradle Plugin
-    compileSdk = 34
+    namespace = "com.example.empathy"
+    compileSdk = 34 // changed from 36 (too new/beta) to 34 (stable) or 35
 
     defaultConfig {
-        applicationId = "com.example.empathy" // уникальный ID приложения
+        applicationId = "com.example.empathy"
         minSdk = flutter.minSdkVersion
         targetSdk = 34
         versionCode = 1
@@ -17,20 +17,25 @@ android {
     }
 
     buildTypes {
-       buildTypes {
-    release {
-        signingConfig = signingConfigs.getByName("debug")
-        isMinifyEnabled = false   // <--- отключаем сжатие кода
-        isShrinkResources = false // <--- отключаем удаление ресурсов
-    }
-}
+        getByName("release") {
+            // Note: Ensure you have a signingConfig defined if you use this line,
+            // otherwise comment it out for now to avoid build errors.
+            signingConfig = signingConfigs.getByName("debug")
+            
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
 
-        debug {
-            // debug-параметры можно оставить пустыми
+        getByName("debug") {
+            // debug options
         }
     }
 
     compileOptions {
+        // --- FIX START: Enable Desugaring ---
+        isCoreLibraryDesugaringEnabled = true
+        // --- FIX END ---
+
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -39,6 +44,12 @@ android {
         jvmTarget = "11"
     }
 }
+
+// --- FIX START: Add Dependency for Desugaring ---
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+}
+// --- FIX END ---
 
 flutter {
     source = "../.."
